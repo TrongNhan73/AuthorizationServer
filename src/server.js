@@ -1,9 +1,9 @@
 import express from 'express';
-import configViewEngine from './configs/viewEngine.config';
+import configViewEngine from './config/viewEngine.config';
 import router from './routes/web';
 import { configDotenv } from 'dotenv';
 import bodyParser from 'body-parser';
-
+import { connection } from './config/database.config';
 
 
 configDotenv();
@@ -14,6 +14,7 @@ configViewEngine(app);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+connection();
 app.use('/', router);
 
 

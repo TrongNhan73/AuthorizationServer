@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import mysql from 'mysql2/promise';
-
+import db from '../models';
 
 
 
@@ -14,18 +14,37 @@ const hashUserPassword = (userpassword) => {
 
 
 const createNewUser = async (email, password, username) => {
-    const connection = await mysql.createConnection({
-        host: 'localhost',
-        port: '3307',
-        user: 'root',
-        database: 'authorizationserver'
-    });
+    // const connection = await mysql.createConnection({
+    //     host: 'localhost',
+    //     port: '3307',
+    //     user: 'root',
+    //     database: 'authorizationserver'
+    // });
+
+
+
     const hashpassword = hashUserPassword(password);
-    connection.query('insert into users(username,email,password) values (?,?,?)', [username, email, hashpassword],
-        function (err, results, fields) {
-            console.log(results);
-        }
-    )
+
+    try {
+        await db.User.create({
+            username,
+            email,
+            password: hashpassword
+        });
+    } catch (err) {
+        console.log(err);
+    }
+
+
+
+
+
+
+    // connection.query('insert into users(username,email,password) values (?,?,?)', [username, email, hashpassword],
+    //     function (err, results, fields) {
+    //         console.log(results);
+    //     }
+    // )
 }
 
 const getUserList = async () => {

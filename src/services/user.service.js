@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import mysql from 'mysql2/promise';
 import db from '../models';
+import { where } from 'sequelize';
 
 
 
@@ -58,25 +59,38 @@ const getUserList = async () => {
     //         return results;
     //     }
     // )
-    const connection = await mysql.createConnection({
-        host: 'localhost',
-        port: '3307',
-        user: 'root',
-        database: 'authorizationserver'
-    });
-    const [results] = await connection.execute('select * from users');
-    return results;
+
+
+
+    // const connection = await mysql.createConnection({
+    //     host: 'localhost',
+    //     port: '3307',
+    //     user: 'root',
+    //     database: 'authorizationserver'
+    // });
+    // const [results] = await connection.execute('select * from users');
+
+
+    let users = [];
+    users = await db.User.findAll();
+    return users;
 }
 
-const deleteUser = async (userid) => {
-    const connection = await mysql.createConnection({
-        host: 'localhost',
-        port: '3307',
-        user: 'root',
-        database: 'authorizationserver'
-    });
-    const [results] = await connection.execute('delete from users where id=?', [userid]);
-    console.log(results);
+const deleteUser = async (id) => {
+    // const connection = await mysql.createConnection({
+    //     host: 'localhost',
+    //     port: '3307',
+    //     user: 'root',
+    //     database: 'authorizationserver'
+    // });
+    // const [results] = await connection.execute('delete from users where id=?', [userid]);
+
+
+    await db.User.destroy({
+        where: {
+            id
+        }
+    })
 }
 
 const updateUser = async (userid, username, email) => {
@@ -90,15 +104,19 @@ const updateUser = async (userid, username, email) => {
 }
 
 const getUserById = async (userId) => {
-    const connection = await mysql.createConnection({
-        host: 'localhost',
-        port: '3307',
-        user: 'root',
-        database: 'authorizationserver'
-    });
-    const [user] = await connection.execute('select * from users where id=?', [userId])
-    return user[0];
+    // const connection = await mysql.createConnection({
+    //     host: 'localhost',
+    //     port: '3307',
+    //     user: 'root',
+    //     database: 'authorizationserver'
+    // });
+    // const [user] = await connection.execute('select * from users where id=?', [userId])
+    // return user[0];
 
+    let user = await db.User.findOne({
+        where: { id: userId }
+    })
+    return user;
 }
 
 module.exports = {

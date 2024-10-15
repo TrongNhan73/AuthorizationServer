@@ -1,5 +1,6 @@
 import e from 'express';
 import { createNewUser, getUserList, deleteUser, getUserById, updateUser } from '../services/user.service';
+import { isColString } from 'sequelize/lib/utils';
 
 const getHomePage = (req, res) => {
     return res.render('home.view.ejs');
@@ -26,6 +27,7 @@ const handleDeleteUser = async (req, res) => {
 
 const handleGetUpdatePage = async (req, res) => {
     let in4User = await getUserById(req.params.id);
+    console.log(in4User.dataValues);
     res.render('updateUser.view.ejs', { in4User });
 }
 

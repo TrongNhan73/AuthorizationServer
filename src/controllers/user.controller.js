@@ -10,6 +10,8 @@ const getHomePage = (req, res) => {
 const getUser = async (req, res) => {
     // const userList =  getUserList();
     const userList = await getUserList();
+
+
     return res.render('user.view.ejs', { userList });
 }
 

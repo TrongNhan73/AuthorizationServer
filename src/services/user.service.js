@@ -94,13 +94,24 @@ const deleteUser = async (id) => {
 }
 
 const updateUser = async (userid, username, email) => {
-    const connection = await mysql.createConnection({
-        host: 'localhost',
-        port: '3307',
-        user: 'root',
-        database: 'authorizationserver'
-    });
-    const [results] = await connection.execute('update users set email=?,username=? where id=? ', [email, username, userid])
+    // const connection = await mysql.createConnection({
+    //     host: 'localhost',
+    //     port: '3307',
+    //     user: 'root',
+    //     database: 'authorizationserver'
+    // });
+    // const [results] = await connection.execute('update users set email=?,username=? where id=? ', [email, username, userid])
+
+    await db.User.update(
+        {
+            email,
+            username
+        },
+        {
+            where: { id: userid }
+        }
+    )
+
 }
 
 const getUserById = async (userId) => {

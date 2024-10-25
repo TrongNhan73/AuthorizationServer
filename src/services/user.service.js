@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import mysql from 'mysql2/promise';
 import db from '../models';
 import { where } from 'sequelize';
+import { raw } from 'body-parser';
 
 
 
@@ -70,7 +71,23 @@ const getUserList = async () => {
     // });
     // const [results] = await connection.execute('select * from users');
 
+    //test
 
+    // let newUser = await db.User.findOne({
+    //     where: { id: 1 },
+    //     include: db.Group,
+    //     attributes: ["id", "username"],
+    //     raw: true,
+    //     nest: true
+    // })
+    let newUser = await db.User.findOne({
+        where: { id: 1 },
+        include: { model: db.Group, attributes: ["name"] },
+        attributes: ["id", "username"],
+        raw: true,
+        nest: true
+    })
+    console.log(">>>>>>>", newUser);
     let users = [];
     users = await db.User.findAll();
     return users;

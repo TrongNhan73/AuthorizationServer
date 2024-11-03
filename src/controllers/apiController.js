@@ -4,6 +4,12 @@ const testApi = (req, res) => {
         data: 'test api'
     })
 }
+
+const handleRegister = (req, res) => {
+    console.log(req.body);
+    res.send('success');
+}
 module.exports = {
-    testApi
+    testApi,
+    handleRegister
 }

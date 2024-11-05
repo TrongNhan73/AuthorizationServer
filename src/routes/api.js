@@ -9,4 +9,5 @@ const routerAPI = express.Router();
 
 routerAPI.get('/testapi', apiController.testApi);
 routerAPI.post('/register', apiController.handleRegister);
+routerAPI.post('/login', apiController.handleLogin);
 export default routerAPI;

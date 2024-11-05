@@ -1,12 +1,14 @@
+import { where } from 'sequelize';
 import db from '../models/index.js';
 import bcrypt from 'bcryptjs';
 
 
 
 
-const salt = bcrypt.genSaltSync(10);
+
 
 const hashUserPassword = (prePassword) => {
+    const salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(prePassword, salt);
 }
 
@@ -25,6 +27,7 @@ const checkPhoneExist = async (phone) => {
     });
     return Boolean(isExist);
 }
+
 
 
 const registerNewUser = async (rawUserData) => {
@@ -65,7 +68,54 @@ const registerNewUser = async (rawUserData) => {
 }
 
 
+const login = async (rawUserData) => {
+    try {
+        if (/^\d+$/.test(rawUserData.ephone)) {
+            //login with phone number
+            let dataUser = await db.User.findOne({
+                where: { phone: rawUserData.ephone }
+            });
+            if (!Boolean(dataUser)) {
+                return {
+                    EM: 'The phone number is not exist!',
+                    EC: '-1',
+                    DT: ''
+                }
+            }
+            return {
+                EM: "phone: " + rawUserData.ephone + ' and pass: ' + rawUserData.password,
+                EC: '0',
+                DT: ''
+            }
+        } else {
+            //login with email
+            let dataUser = await db.User.findOne({
+                where: { email: rawUserData.ephone }
+            });
+            if (!Boolean(dataUser)) {
+                return {
+                    EM: 'The email is not exist!',
+                    EC: '-1',
+                    DT: ''
+                }
+            }
+            return {
+                EM: "email: " + rawUserData.ephone + ' and pass: ' + rawUserData.password,
+                EC: '0',
+                DT: ''
+            }
+        }
+    } catch (err) {
+        return {
+            EM: "Error when login{service}",
+            EC: '-1',
+            DT: ''
+        }
+    }
+}
+
 
 module.exports = {
-    registerNewUser
+    registerNewUser,
+    login
 }

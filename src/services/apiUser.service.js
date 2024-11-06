@@ -82,10 +82,18 @@ const login = async (rawUserData) => {
                     DT: ''
                 }
             }
-            return {
-                EM: "phone: " + rawUserData.ephone + ' and pass: ' + rawUserData.password,
-                EC: '0',
-                DT: ''
+            if (!bcrypt.compareSync(rawUserData.password, dataUser.password)) {
+                return {
+                    EM: 'The password is wrong!',
+                    EC: '-1',
+                    DT: ''
+                }
+            } else {
+                return {
+                    EM: 'Login success!',
+                    EC: '0',
+                    DT: dataUser.get({ plain: true })
+                }
             }
         } else {
             //login with email
@@ -99,11 +107,20 @@ const login = async (rawUserData) => {
                     DT: ''
                 }
             }
-            return {
-                EM: "email: " + rawUserData.ephone + ' and pass: ' + rawUserData.password,
-                EC: '0',
-                DT: ''
+            if (!bcrypt.compareSync(rawUserData.password, dataUser.password)) {
+                return {
+                    EM: 'The password is wrong!',
+                    EC: '-1',
+                    DT: ''
+                }
+            } else {
+                return {
+                    EM: 'Login success!',
+                    EC: '0',
+                    DT: dataUser.get({ plain: true })
+                }
             }
+
         }
     } catch (err) {
         return {

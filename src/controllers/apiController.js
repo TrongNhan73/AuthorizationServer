@@ -1,4 +1,4 @@
-import apiUser from '../services/apiUser.service';
+import apiUser from '../services/apiAuthen.service';
 const testApi = (req, res) => {
     res.status(200).json({
         message: "ok",

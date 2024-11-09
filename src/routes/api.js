@@ -13,7 +13,7 @@ routerAPI.post('/register', apiController.handleRegister);
 routerAPI.post('/login', apiController.handleLogin);
 
 
-routerAPI.get('/users/read', userConller.handleShowUsers);
+routerAPI.get('/users/read/', userConller.handleShowUsers);
 routerAPI.post('/users/create', userConller.handleCreateUsers);
 routerAPI.put('/users/update', userConller.handleUpdateUsers);
 routerAPI.delete('/users/delete', userConller.handleDeleteUsers);

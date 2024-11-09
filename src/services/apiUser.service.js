@@ -1,3 +1,4 @@
+import { where } from 'sequelize';
 import db from '../models/index';
 
 const getAllUsers = async () => {
@@ -29,18 +30,82 @@ const getAllUsers = async () => {
     }
 
 }
-const createUser = async () => {
+
+
+const getUserWithPagination = async (page, limit) => {
+    try {
+        let offset = (page - 1) * limit;
+        let data = await db.User.findAndCountAll({
+            offset: offset, limit: limit
+        })
+        return {
+            EC: '0',
+            EM: 'success',
+            DT: data
+        }
+    } catch (e) {
+        console.log(e.message);
+        return {
+            EC: '-1',
+            EM: 'Error when get users with pagination(service)',
+            DT: []
+        }
+    }
+}
+const createUser = async (data) => {
+    try {
+        let result = await db.User.create({
+
+        })
+    } catch (e) {
+
+    }
 
 }
-const updateUser = async () => {
+const updateUser = async (data) => {
+    let user = await db.User.findOne({
+        where: { id: data.id }
+    })
+    if (!user) {
+        return {
+            EC: '-1',
+            EM: 'Can\' find user',
+            DT: []
+        }
+    } else {
 
+    }
 }
-const deleteUser = async () => {
-
+const deleteUser = async (id) => {
+    try {
+        let result = db.User.delete({ where: { id } });
+        console.log(result);
+        if (result) {
+            return {
+                EC: '0',
+                EM: 'Delete successful',
+                DT: []
+            }
+        } else {
+            return {
+                EC: '-1',
+                EM: 'Error when delete users(service)',
+                DT: []
+            }
+        }
+    } catch (e) {
+        console.log(e.message);
+        return {
+            EC: '-1',
+            EM: 'Error when delete users(service)',
+            DT: []
+        }
+    }
 }
 module.exports = {
     getAllUsers,
     createUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    getUserWithPagination
 }

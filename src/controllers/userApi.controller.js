@@ -58,9 +58,14 @@ const handleUpdateUsers = (req, res) => {
         })
     }
 }
-const handleDeleteUsers = (req, res) => {
+const handleDeleteUsers = async (req, res) => {
     try {
-
+        let data = await apiUserService.deleteUser(req.body.id);
+        res.status(200).send({
+            EC: data.EC,
+            EM: data.EM,
+            DT: data.DT
+        })
     } catch (e) {
         console.log(e.message);
         res.status(300).send({

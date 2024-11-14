@@ -4,7 +4,7 @@ import db from '../models/index';
 const getAllUsers = async () => {
     try {
         let users = await db.User.findAll({
-            attributes: ["id", "username", "email", "phone", "sex"],
+            attributes: ["id", "username", "email", "phone", "sex", "groupId"],
             include: { model: db.Group, attributes: ["name", "description"] },
         });
         if (users) {
@@ -36,7 +36,7 @@ const getUserWithPagination = async (page, limit) => {
     try {
         let offset = (page - 1) * limit;
         let data = await db.User.findAndCountAll({
-            attributes: ["id", "username", "email", "phone", "sex"],
+            attributes: ["id", "username", "email", "phone", "sex", "groupId", "address"],
             include: { model: db.Group, attributes: ["name", "description"] },
             offset: offset, limit: limit
         });

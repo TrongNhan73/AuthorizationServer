@@ -2,7 +2,12 @@ import db from '../models/index';
 
 const getAllGroup = async () => {
     try {
-        let data = await db.Group.findAll();
+        let data = await db.Group.findAll({
+            order: [
+                ['name', 'ASC']
+            ],
+            attributes: ["id", "name", "description"],
+        });
         return {
             EC: '0',
             EM: 'Successful',

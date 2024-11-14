@@ -35,7 +35,19 @@ const handleShowUsers = async (req, res) => {
 }
 const handleCreateUsers = (req, res) => {
     try {
+        const { email, phone, address, gender, group, userName, password } = req.body;
+        console.log(req.body);
 
+        if ((email || phone) && address && gender && group && userName && password) {
+            console.log({ email, phone, address, gender, group, userName, password });
+            res.send('success');
+        } else {
+            return res.status(400).json({
+                EM: 'Missing required parameter',//error message
+                EC: '1',//error code
+                DT: ''//data
+            });
+        }
     } catch (e) {
         console.log(e.message);
         res.status(300).send({

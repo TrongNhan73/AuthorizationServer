@@ -1,5 +1,31 @@
 import { where } from 'sequelize';
 import db from '../models/index';
+import bcrypt from 'bcryptjs';
+
+
+
+
+
+
+const hashUserPassword = (prePassword) => {
+    const salt = bcrypt.genSaltSync(10);
+    return bcrypt.hashSync(prePassword, salt);
+}
+const checkEmailExist = async (email) => {
+    const isExist = await db.User.findOne({
+        where: { email }
+    });
+    return Boolean(isExist);
+}
+
+
+const checkPhoneExist = async (phone) => {
+    const isExist = await db.User.findOne({
+        where: { phone }
+    });
+    return Boolean(isExist);
+}
+
 
 const getAllUsers = async () => {
     try {
@@ -61,11 +87,40 @@ const getUserWithPagination = async (page, limit) => {
 }
 const createUser = async (data) => {
     try {
+        let password = hashUserPassword(data.password);
+
+        if (await checkEmailExist(data.email)) {
+            return {
+                EC: '-1',
+                EM: 'The email is exist',
+                DT: []
+            }
+        }
+        if (await checkPhoneExist(data.phone)) {
+            return {
+                EC: '-1',
+                EM: 'The phone is exist',
+                DT: []
+            }
+        }
         let result = await db.User.create({
+            email: data.email,
+            phone: data.phone,
+            username: data.userName,
+            address: data.address,
+            sex: data.gender,
+            groupId: data.group,
+            password
+        });
+        console.log(result);
+        return {
+            EC: '0',
+            EM: 'Create user successful',
+            DT: []
+        }
 
-        })
     } catch (e) {
-
+        throw e;
     }
 
 }

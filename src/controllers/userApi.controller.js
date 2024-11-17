@@ -33,16 +33,15 @@ const handleShowUsers = async (req, res) => {
         })
     }
 }
-const handleCreateUsers = (req, res) => {
+const handleCreateUsers = async (req, res) => {
     try {
-        const { email, phone, address, gender, group, userName, password } = req.body;
         console.log(req.body);
+        if ((req.body.email || req.body.phone) && req.body.address && req.body.gender !== undefined && req.body.group !== undefined && req.body.userName && req.body.password) {
+            return res.status(200).send(await apiUserService.createUser(req.body))
 
-        if ((email || phone) && address && gender && group && userName && password) {
-            console.log({ email, phone, address, gender, group, userName, password });
-            res.send('success');
+
         } else {
-            return res.status(400).json({
+            return res.status(200).json({
                 EM: 'Missing required parameter',//error message
                 EC: '1',//error code
                 DT: ''//data

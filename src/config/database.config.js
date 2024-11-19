@@ -5,7 +5,8 @@ const sequelize = new Sequelize('authorizationserver', 'root', null, {
     host: 'localhost',
     dialect: 'mysql',
     port: '3306',
-    logging: false
+    logging: (msg) => console.log(msg)
+    // logging: false
 });
 
 

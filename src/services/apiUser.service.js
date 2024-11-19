@@ -11,6 +11,7 @@ const hashUserPassword = (prePassword) => {
     const salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(prePassword, salt);
 }
+
 const checkEmailExist = async (email) => {
     const isExist = await db.User.findOne({
         where: { email }
@@ -18,14 +19,12 @@ const checkEmailExist = async (email) => {
     return Boolean(isExist);
 }
 
-
 const checkPhoneExist = async (phone) => {
     const isExist = await db.User.findOne({
         where: { phone }
     });
     return Boolean(isExist);
 }
-
 
 const getAllUsers = async () => {
     try {
@@ -57,7 +56,6 @@ const getAllUsers = async () => {
 
 }
 
-
 const getUserWithPagination = async (page, limit) => {
     try {
         let offset = (page - 1) * limit;
@@ -85,6 +83,7 @@ const getUserWithPagination = async (page, limit) => {
         }
     }
 }
+
 const createUser = async (data) => {
     try {
         let password = hashUserPassword(data.password);
@@ -112,7 +111,6 @@ const createUser = async (data) => {
             groupId: data.group,
             password
         });
-        console.log(result);
         return {
             EC: '0',
             EM: 'Create user successful',
@@ -124,20 +122,38 @@ const createUser = async (data) => {
     }
 
 }
-const updateUser = async (data) => {
-    let user = await db.User.findOne({
-        where: { id: data.id }
-    })
-    if (!user) {
-        return {
-            EC: '-1',
-            EM: 'Can\'t find user',
-            DT: []
-        }
-    } else {
 
+const updateUser = async (data) => {
+    try {
+        let user = await db.User.findOne({
+            where: { id: data.id },
+            logging: console.log
+        });
+
+        if (!user) {
+            return {
+                EC: '-1',
+                EM: 'Can\'t find user',
+                DT: []
+            }
+        } else {
+            await user.update({
+                username: data.userName,
+                address: data.address,
+                sex: data.gender,
+                groupId: data.group
+            });
+            return {
+                EC: '0',
+                EM: 'Update sucessful',
+                DT: []
+            }
+        }
+    } catch (e) {
+        throw e;
     }
 }
+
 const deleteUser = async (id) => {
     try {
         let user = await db.User.findOne({ where: { id } });

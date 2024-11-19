@@ -35,11 +35,8 @@ const handleShowUsers = async (req, res) => {
 }
 const handleCreateUsers = async (req, res) => {
     try {
-        console.log(req.body);
         if ((req.body.email || req.body.phone) && req.body.address && req.body.gender !== undefined && req.body.group !== undefined && req.body.userName && req.body.password) {
             return res.status(200).send(await apiUserService.createUser(req.body))
-
-
         } else {
             return res.status(200).json({
                 EM: 'Missing required parameter',//error message
@@ -57,9 +54,15 @@ const handleCreateUsers = async (req, res) => {
     }
 
 }
-const handleUpdateUsers = (req, res) => {
+const handleUpdateUsers = async (req, res) => {
     try {
-
+        let result = await apiUserService.updateUser(req.body);
+        res.send({
+            EC: result.EC,
+            EM: result.EM,
+            DT: result.DT
+        })
+        //  let result= await updateUser(req.body);
     } catch (e) {
         console.log(e.message);
         res.status(300).send({

@@ -1,7 +1,8 @@
 import { where } from 'sequelize';
 import db from '../models/index.js';
 import bcrypt from 'bcryptjs';
-
+import { getGroupWithRole } from './jwt.service.js';
+import { verifyJWT, createJWT } from "../middlewares/jwtAction.middleware.js";
 
 
 
@@ -52,7 +53,8 @@ const registerNewUser = async (rawUserData) => {
             email: rawUserData.email,
             phone: rawUserData.phoneNum,
             username: rawUserData.userName,
-            password: passwordhashed
+            password: passwordhashed,
+            groupId: 5
         });
         return {
             EM: 'Create user successfully',
@@ -114,15 +116,24 @@ const login = async (rawUserData) => {
                     DT: ''
                 }
             } else {
+                let roles = await getGroupWithRole(dataUser);
+                let payload = {
+                    email: dataUser.email,
+                    roles
+                }
+                let token = createJWT(payload);
                 return {
                     EM: 'Login success!',
                     EC: '0',
-                    DT: dataUser.get({ plain: true })
+                    DT: {
+                        access_token: token,
+                    }
                 }
             }
 
         }
     } catch (err) {
+        console.log(err.message);
         return {
             EM: "Error when login{service}",
             EC: '-1',

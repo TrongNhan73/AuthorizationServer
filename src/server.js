@@ -6,12 +6,11 @@ import bodyParser from 'body-parser';
 import { connection } from './config/database.config';
 import { Cors } from './middlewares/Cors';
 import routerAPI from './routes/api';
-
+import { createJWT, verifyToken } from './middlewares/jwtAction.middleware';
 
 configDotenv();
 const app = express();
 configViewEngine(app);
-
 
 app.use(Cors);
 app.use(bodyParser.json());
@@ -19,8 +18,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 connection();
 app.use('/', routerWeb);
 app.use('/api/v1/', routerAPI);
-
-
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

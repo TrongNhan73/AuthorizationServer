@@ -2,9 +2,19 @@ import express from 'express';
 import apiController from '../controllers/apiController';
 import userController from '../controllers/userApi.controller';
 import groupController from '../controllers/groupApi.controller';
+import { checkUserJWT, checkUserPermission } from '../middlewares/jwtAction.middleware';
+
+
+const checkUserLogin = (req, res, next) => {
+    const nonSecurePaths = ['/users/read/', '/users/create', '/users/update', '/users/delete'];
+    if (nonSecurePaths.includes(req.path)) return next();
+
+
+}
+
 
 const routerAPI = express.Router();
-
+routerAPI.all('*', checkUserJWT, checkUserPermission);
 
 
 

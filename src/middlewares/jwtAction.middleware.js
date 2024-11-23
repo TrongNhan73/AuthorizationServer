@@ -2,6 +2,7 @@ require('dotenv').config();
 import jwt from "jsonwebtoken";
 
 
+const nonSecurePaths = ['/login', '/register'];
 
 const createJWT = (payload) => {
     let key = process.env.JWT_SECRET;
@@ -19,11 +20,10 @@ const verifyToken = (token) => {
     let key = process.env.JWT_SECRET;
     let data = null;
 
-
     try {
         data = jwt.verify(token, key);
     } catch (err) {
-        console.log(err.message);
+        console.log(">>>>Err while verify token" + err.message);
     }
     return data;
 
@@ -37,7 +37,67 @@ const verifyToken = (token) => {
     // })
 }
 
+const checkUserJWT = (req, res, next) => {
+    if (nonSecurePaths.includes(req.path)) {
+        return next();
+    }
+    let cookie = req.cookies;
+    if (cookie && cookie.jwt) {
+        let decoded = verifyToken(cookie.jwt);
+        if (decoded) {
+            req.user = decoded;
+            next();
+        } else {
+            return res.status(401).json({
+                EC: '-1',
+                EM: 'Not authenticated the user'
+            })
+        }
+    } else {
+        return res.status(401).json({
+            EC: '-1',
+            EM: 'Not authenticated the user'
+        })
+    }
+
+}
+
+
+
+const checkUserPermission = (req, res, next) => {
+    if (nonSecurePaths.includes(req.path)) {
+        return next();
+    }
+    if (req.user) {
+        let email = req.user.email;
+        let roles = req.user.roles.Roles;
+        let currentUrl = req.path;
+        console.log(currentUrl);
+        if (!roles || roles.length === 0) {
+            return res.status(403).json({
+                EC: '-1',
+                EM: `You don't have permission to access this resource`
+            })
+        }
+        let canAccess = roles.some(item => item.url === currentUrl);
+        if (canAccess) {
+            next();
+        } else {
+            return res.status(403).json({
+                EC: '-1',
+                EM: `You don't have permission to access this resource`
+            })
+        }
+    } else {
+        return res.status(401).json({
+            EC: '-1',
+            EM: 'Not authenticated the user'
+        })
+    }
+}
 module.exports = {
     createJWT,
-    verifyToken
+    verifyToken,
+    checkUserJWT,
+    checkUserPermission
 }

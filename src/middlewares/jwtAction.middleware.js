@@ -46,6 +46,7 @@ const checkUserJWT = (req, res, next) => {
         let decoded = verifyToken(cookie.jwt);
         if (decoded) {
             req.user = decoded;
+            req.token = cookie;
             next();
         } else {
             return res.status(401).json({
@@ -65,7 +66,7 @@ const checkUserJWT = (req, res, next) => {
 
 
 const checkUserPermission = (req, res, next) => {
-    if (nonSecurePaths.includes(req.path)) {
+    if (nonSecurePaths.includes(req.path) || req.path === '/account') {
         return next();
     }
     if (req.user) {

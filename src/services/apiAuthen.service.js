@@ -119,7 +119,8 @@ const login = async (rawUserData) => {
                 let roles = await getGroupWithRole(dataUser);
                 let payload = {
                     email: dataUser.email,
-                    roles
+                    roles,
+                    username: dataUser.username
                 }
                 let token = createJWT(payload);
                 return {
@@ -127,6 +128,9 @@ const login = async (rawUserData) => {
                     EC: '0',
                     DT: {
                         access_token: token,
+                        roles,
+                        email: dataUser.email,
+                        username: dataUser.username
                     }
                 }
             }

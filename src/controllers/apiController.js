@@ -66,13 +66,23 @@ const handleLogin = async (req, res) => {
     }
 }
 
-
+const getUserAccount = async (req, res) => {
+    return res.status(200).json({
+        EM: 'ok',
+        EC: '0',
+        DT: {
+            access_token: req.token,
+            ...req.user
+        }
+    })
+}
 
 
 module.exports = {
     testApi,
     handleRegister,
-    handleLogin
+    handleLogin,
+    getUserAccount
 }
 
 

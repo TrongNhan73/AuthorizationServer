@@ -50,7 +50,7 @@ const handleLogin = async (req, res) => {
 
         }
         let data = await apiUser.login(req.body);
-        res.cookie("jwt", data.DT.access_token, { httpOnly: true, maxAge: 60 * 60 * 1000 });
+        res.cookie("jwt", data.DT.access_token, { httpOnly: true, maxAge: 6 * 60 * 60 * 1000 });
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -77,12 +77,29 @@ const getUserAccount = async (req, res) => {
     })
 }
 
+const logout = (req, res) => {
+    try {
+        res.clearCookie('jwt')
+        return res.status(200).json({
+            EM: 'Log out successful',
+            EC: '0',
+            DT: ''
+        })
+    } catch (err) {
+        return res.status(500).json({
+            EM: 'Error while logout',
+            EC: '0',
+            DT: ''
+        })
+    }
+}
 
 module.exports = {
     testApi,
     handleRegister,
     handleLogin,
-    getUserAccount
+    getUserAccount,
+    logout
 }
 
 

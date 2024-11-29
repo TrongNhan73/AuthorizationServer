@@ -23,6 +23,7 @@ routerAPI.get('/testapi', apiController.testApi);
 routerAPI.post('/register', apiController.handleRegister);
 routerAPI.post('/login', apiController.handleLogin);
 routerAPI.get('/account', apiController.getUserAccount);
+routerAPI.post('/logout', apiController.logout);
 
 
 routerAPI.get('/users/read/', userController.handleShowUsers);

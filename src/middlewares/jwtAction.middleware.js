@@ -38,6 +38,7 @@ const verifyToken = (token) => {
 }
 
 const checkUserJWT = (req, res, next) => {
+
     if (nonSecurePaths.includes(req.path)) {
         return next();
     }
@@ -47,7 +48,7 @@ const checkUserJWT = (req, res, next) => {
         if (decoded) {
             req.user = decoded;
             req.token = cookie;
-            next();
+            return next();
         } else {
             return res.status(401).json({
                 EC: '-1',
@@ -82,7 +83,7 @@ const checkUserPermission = (req, res, next) => {
         }
         let canAccess = roles.some(item => item.url === currentUrl);
         if (canAccess) {
-            next();
+            return next();
         } else {
             return res.status(403).json({
                 EC: '-1',

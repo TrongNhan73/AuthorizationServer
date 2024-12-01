@@ -1,4 +1,4 @@
-import e from 'express';
+
 import { createNewUser, getUserList, deleteUser, getUserById, updateUser } from '../services/user.service';
 import { isColString } from 'sequelize/lib/utils';
 
